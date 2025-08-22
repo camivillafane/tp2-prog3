@@ -27,17 +27,16 @@ async function getProductos() {
 
 // Persistir los datos de la consulta anterior en un archivo local JSON
 
-async function persistirDatos() {
+async function persistirDatos(productos) {
   try {
-    const response = await getProductos();
 
-    if (!response) {
+    if (!productos) {
       console.error('Error');
       return;
     }
 
-    await fs.promises.writeFile('productos.json', JSON.stringify(response, null, 2));
-    console.log('Datos guardados en productos.json');
+    await fs.promises.writeFile('productos.json', JSON.stringify(productos, null, 2));
+    console.log('\nDatos guardados en productos.json');
   } catch (error) {
     console.error('Error:', error);
   }
@@ -111,8 +110,8 @@ async function eliminarProducto(id) {
 
 
 async function main() {
-    await getProductos();  // Recuperar todos
-    await persistirDatos(); // Persistir datos
+    const productos = await getProductos();  // Recuperar todo
+    await persistirDatos(productos); // Persistir datos
     await addProduct();   // Agregar nuevo
     await eliminarProducto(1); //eliminar producto
 }

@@ -17,10 +17,10 @@ async function getProductos() {
         }
 
         const datos = await response.json();
-        console.log("Productos obtenidos:", datos);
+        console.log("\nProductos obtenidos:", datos);
         
     } catch (error) {
-        console.log('Ocurrió un error:', error.message);
+        console.log('\nOcurrió un error:', error.message);
     }
 }
 
@@ -42,16 +42,40 @@ async function addProduct() {
         });
 
         const data = await res.json();
-        console.log("Producto agregado a la API:", data);
+        console.log("\nProducto agregado a la API:", data);
 
     } catch (err) {
-        console.error("No se pudo agregar el producto:", err.message);
+        console.error("\nNo se pudo agregar el producto:", err.message);
     }
 }
+
+// Eliminar un producto (DELETE).
+
+async function eliminarProducto(id) {
+    try {
+        const response = await fetch(`${url}${id}`,{
+            method : 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error${response.status}`);
+        }
+
+        const productoEliminado = await response.json();
+        console.log('\nProducto eliminado de la API:', productoEliminado);
+
+
+    } catch(error) {
+        console.log(`\nNo se pudo eliminar el producto ${error}`)
+    }
+};
+
+
 
 async function main() {
     await getProductos();  // Recuperar todos
     await addProduct();   // Agregar nuevo
+    await eliminarProducto(1); //eliminar producto
 }
 
 main();

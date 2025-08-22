@@ -107,13 +107,35 @@ async function eliminarProducto(id) {
     }
 };
 
+//modificar los datos de un producto
 
+async function modificarProducto(id, datosNuevos) {
+    try {
+        const response = await fetch(`${url}${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(datosNuevos),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}`);
+        }
+
+        const productoModificado = await response.json();
+        console.log('\nProducto modificado en la API:', productoModificado);
+
+    } catch (error) {
+        console.log(`\nNo se pudo modificar el producto: ${error}`);
+    }
+}
 
 async function main() {
     const productos = await getProductos();  // Recuperar todo
     await persistirDatos(productos); // Persistir datos
     await addProduct();   // Agregar nuevo
+    await buscarProducto(2); // Buscar producto por ID
     await eliminarProducto(1); //eliminar producto
+    await modificarProducto(3, { title: "Mens Cotton Jacket Modificado", price: 99.99 }); //modificar producto
 }
 
 main();

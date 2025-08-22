@@ -49,6 +49,25 @@ async function addProduct() {
     }
 }
 
+//Buscar la informacion de un determinado producto utilizando un id como parametro
+async function buscarProducto(id) {
+    try {
+        const response = await fetch(`${url}${id}`, {
+            method: 'GET'
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}`);
+        }
+
+        const producto = await response.json();
+        console.log(`\nProducto ID: ${id} encontrado:`, producto);
+
+    } catch (error) {
+        console.log(`\nNo se pudo encontrar el producto: ${error}`);
+    }
+}
+
 // Eliminar un producto (DELETE).
 
 async function eliminarProducto(id) {

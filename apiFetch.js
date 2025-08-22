@@ -18,11 +18,30 @@ async function getProductos() {
 
         const datos = await response.json();
         console.log("\nProductos obtenidos:", datos);
+        return datos;
         
     } catch (error) {
         console.log('\nOcurrió un error:', error.message);
     }
 }
+
+// Persistir los datos de la consulta anterior en un archivo local JSON
+
+async function persistirDatos() {
+  try {
+    const response = await getProductos();
+
+    if (!response) {
+      console.error('Error');
+      return;
+    }
+
+    await fs.promises.writeFile('productos.json', JSON.stringify(response, null, 2));
+    console.log('Datos guardados en productos.json');
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
 
 // Agregar un nuevo producto
 async function addProduct() {
@@ -46,6 +65,25 @@ async function addProduct() {
 
     } catch (err) {
         console.error("\nNo se pudo agregar el producto:", err.message);
+    }
+}
+
+//Buscar la informacion de un determinado producto utilizando un id como parametro
+async function buscarProducto(id) {
+    try {
+        const response = await fetch(`${url}${id}`, {
+            method: 'GET'
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}`);
+        }
+
+        const producto = await response.json();
+        console.log(`\nProducto ID: ${id} encontrado:`, producto);
+
+    } catch (error) {
+        console.log(`\nNo se pudo encontrar el producto: ${error}`);
     }
 }
 
@@ -74,6 +112,7 @@ async function eliminarProducto(id) {
 
 async function main() {
     await getProductos();  // Recuperar todos
+    await persistirDatos(); // Persistir datos
     await addProduct();   // Agregar nuevo
     await eliminarProducto(1); //eliminar producto
 }
